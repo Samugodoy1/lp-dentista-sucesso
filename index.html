@@ -5,6 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Combo Dentista de Sucesso | OdontoHub Core</title>
 <meta name="description" content="Dois ebooks interativos para dentistas: do recém-formado ao consultório previsível. Método prático, acesso imediato.">
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1534655938050656');
+fbq('track', 'PageView');
+fbq('track', 'ViewContent', {
+  content_name: 'Combo Dentista de Sucesso',
+  content_category: 'Ebook',
+  content_type: 'product',
+  value: 37.00,
+  currency: 'BRL'
+});
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1534655938050656&amp;ev=PageView&amp;noscript=1"></noscript>
+<!-- End Meta Pixel Code -->
 <!-- Favicon: SVG inline com inicial O em verde -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23FBFAF7'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-size='18' font-weight='700' fill='%231B4D3E'%3EO%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -738,6 +758,23 @@ const PRECO_DE  = "R$ 97";   // preço ancorado (riscado)
 const PRECO_POR = "R$ 37";   // preço promocional do combo
 const NOME_PRODUTO = "Combo Dentista de Sucesso";
 const WHATSAPP_SUPORTE = "COLE_AQUI_O_LINK_WHATSAPP"; // ex: https://wa.me/5511999999999
+const META_PIXEL_ID = "1534655938050656";
+
+function getPrecoNumerico() {
+  return parseFloat(String(PRECO_POR).replace(/[^\d,]/g, '').replace(',', '.')) || 37;
+}
+
+function trackInitiateCheckout() {
+  if (typeof fbq !== 'function') return;
+  fbq('track', 'InitiateCheckout', {
+    content_name: NOME_PRODUTO,
+    content_category: 'Ebook',
+    content_type: 'product',
+    num_items: 2,
+    value: getPrecoNumerico(),
+    currency: 'BRL'
+  });
+}
 
 /* Links do rodapé — preencher quando tiver */
 const LINK_TERMOS = "#";
@@ -755,10 +792,11 @@ const LINK_PRIVACIDADE = "#";
   document.getElementById('offer-product-name').textContent = NOME_PRODUTO;
   document.title = NOME_PRODUTO + ' | OdontoHub Core';
 
-  // Checkout em todos os CTAs
+  // Checkout em todos os CTAs + InitiateCheckout no pixel
   document.querySelectorAll('.js-checkout').forEach(btn => {
     btn.href = KIWIFY_CHECKOUT_URL;
     btn.setAttribute('rel', 'noopener');
+    btn.addEventListener('click', trackInitiateCheckout);
   });
 
   // Rodapé
