@@ -768,8 +768,17 @@ function getPrecoNumerico() {
   return parseFloat(String(PRECO_POR).replace(/[^\d,]/g, '').replace(',', '.')) || 37;
 }
 
-function trackInitiateCheckout() {
-  if (typeof fbq !== 'function') return;
+function trackInitiateCheckout(url) {
+  if (typeof fbq !== 'function') {
+    window.location.href = url;
+    return;
+  }
+  var redirected = false;
+  function go() {
+    if (redirected) return;
+    redirected = true;
+    window.location.href = url;
+  }
   fbq('track', 'InitiateCheckout', {
     content_name: NOME_PRODUTO,
     content_category: 'Ebook',
@@ -777,7 +786,8 @@ function trackInitiateCheckout() {
     num_items: 2,
     value: getPrecoNumerico(),
     currency: 'BRL'
-  });
+  }, { event_callback: go });
+  setTimeout(go, 800);
 }
 
 /* Links do rodapé — preencher quando tiver */
@@ -800,7 +810,10 @@ const LINK_PRIVACIDADE = "#";
   document.querySelectorAll('.js-checkout').forEach(btn => {
     btn.href = KIWIFY_CHECKOUT_URL;
     btn.setAttribute('rel', 'noopener');
-    btn.addEventListener('click', trackInitiateCheckout);
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      trackInitiateCheckout(KIWIFY_CHECKOUT_URL);
+    });
   });
 
   // Rodapé
